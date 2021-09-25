@@ -33,12 +33,11 @@ public class produtoDAO implements IDAO {
         try {
             ps = con.prepareStatement("INSERT INTO produtos(id, nome, estoque, valor_custo, valor_venda, dat_ultima_compra, fornecedores_id) VALUE(?, ?, ?, ?, ?, ?, ?)");
             ps.setInt(1, p.getId());
-            ps.setString(2, p.getNome());
+            ps.setString(2, p.getNome().replaceAll("\"", ""));
             ps.setInt(3, p.getEstoque());
             ps.setDouble(4, p.getValor_custo());
             ps.setDouble(5, p.getValor_venda());
             Date data = p.getDat_ultima_compra().getTime();
-            System.out.println(data);
             ps.setDate(6, new java.sql.Date (data.getTime()));
             ps.setInt(7, p.getFornecedor().getId());
             

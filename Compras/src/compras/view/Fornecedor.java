@@ -36,10 +36,11 @@ public class Fornecedor extends javax.swing.JFrame {
     public void preencheTabela() {
 
         limpaTabela();
-
-        for (int i = 0; i < this.controlador.getListaTodosFornecedores().size(); i++) {
-
-            ((DefaultTableModel) this.jtFornecedores.getModel()).addRow(
+        int quantidadeDeFornecedores = this.controlador.getListaTodosFornecedores().size();
+        for (int i = 0; i < quantidadeDeFornecedores; i++) {
+            
+            if (quantidadeDeFornecedores > 0) {
+                ((DefaultTableModel) this.jtFornecedores.getModel()).addRow(
                     new Object[]{
                         this.controlador.getListaTodosFornecedores().get(i).getId(),
                         this.controlador.getListaTodosFornecedores().get(i).getRazao_social(),
@@ -48,19 +49,19 @@ public class Fornecedor extends javax.swing.JFrame {
                         this.controlador.getListaTodosFornecedores().get(i).getTelefone(),
                         this.controlador.getListaTodosFornecedores().get(i).getEmail()
                     }
-            );
+                );
+            } else {
+                DefaultTableModel tabela = (DefaultTableModel) jtFornecedores.getModel();
+                tabela.setRowCount(0);
+            }
         }
+        DefaultTableModel tabela = (DefaultTableModel) jtFornecedores.getModel();
+        tabela.fireTableDataChanged();
     }
 
     private void limpaTabela() {
-
-        for (int i = 1; i < this.controlador.getListaTodosFornecedores().size(); i++) {
-            if (((DefaultTableModel) this.jtFornecedores.getModel()).getRowCount() > 0) {
-                ((DefaultTableModel) this.jtFornecedores.getModel()).removeRow(i - 1);
-            }
-
-        }
-
+        DefaultTableModel tabela = (DefaultTableModel) jtFornecedores.getModel();
+        tabela.setRowCount(0);
     }
 
     /**
@@ -228,6 +229,7 @@ public class Fornecedor extends javax.swing.JFrame {
                     }
                 }
             }
+            preencheTabela();
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(rootPane, "Ocorreu um erro no processo de leitura. Verifique se o arquivo está correto.");
         } catch (BancoDeDadosException ex) {

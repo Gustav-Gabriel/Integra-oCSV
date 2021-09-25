@@ -30,7 +30,8 @@ public class FornecedorController {
         return this.fornecedor;
     }
 
-    public ArrayList<Fornecedor> getListaTodosFornecedores() {
+    public ArrayList<Fornecedor> getListaTodosFornecedores() throws BancoDeDadosException {
+        this.listaFornecedores = db.buscaTodos();
         return this.listaFornecedores;
     }
 
@@ -49,7 +50,6 @@ public class FornecedorController {
                                                email);
         
         db.inserir(fornecedor);
-        listaFornecedores.add(fornecedor);
     }
     
     public void alterarFornecedores(int idFornecedor,

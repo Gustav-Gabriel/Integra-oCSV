@@ -59,6 +59,5 @@ public class ProdutosController {
                                 dataUltimaCompra, 
                                 fornecedor);
         db.inserir(produto);
-        listaProdutos.add(produto);
     }
 }
