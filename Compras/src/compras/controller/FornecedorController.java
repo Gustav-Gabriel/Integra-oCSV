@@ -68,4 +68,8 @@ public class FornecedorController {
         
         db.atualizar(fornecedor);
     }
+    
+    public void deletarFornecedores(int idFornecedor) throws BancoDeDadosException {
+        db.excluir(idFornecedor);
+    }
 }

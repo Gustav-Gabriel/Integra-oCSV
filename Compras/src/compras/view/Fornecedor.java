@@ -223,7 +223,7 @@ public class Fornecedor extends javax.swing.JFrame {
                         break;
                     }
                     case 3: { 
-                        // TO-DO: delete
+                        controlador.deletarFornecedores(id);
                         break;
                     }
                 }

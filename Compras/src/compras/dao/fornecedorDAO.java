@@ -120,6 +120,25 @@ public class fornecedorDAO implements IDAO {
 
     @Override
     public int excluir(int id) throws BancoDeDadosException {
+        Connection con = Conexao.getConexao();
+        PreparedStatement ps = null;
+        
+         try {
+            ps = con.prepareStatement("DELETE FROM fornecedores WHERE id=?");
+            ps.setInt(1, id);
+            
+            ps.executeUpdate();
+        } catch (SQLException ex) {   
+            ex.printStackTrace();
+            System.out.println(ex.getMessage());
+            throw new BancoDeDadosException(ex.getMessage());           
+        } finally{
+            try {
+                ps.close();
+            } catch (SQLException ex) {
+                throw new BancoDeDadosException(ex.getMessage()); 
+            }
+        }
         return 0;
     }
 
