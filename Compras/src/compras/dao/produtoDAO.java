@@ -60,6 +60,33 @@ public class produtoDAO implements IDAO {
 
     @Override
     public void atualizar(Object objeto) throws BancoDeDadosException {
+        Produto p = (Produto)objeto;
+        Connection con = Conexao.getConexao();
+        PreparedStatement ps = null;
+        
+        try {
+            ps = con.prepareStatement("UPDATE produtos SET nome=?, estoque=?, valor_custo=?, valor_venda=?, dat_ultima_compra=?, fornecedores_id=? WHERE id=?");
+            ps.setString(1, p.getNome().replaceAll("\"", ""));
+            ps.setInt(2, p.getEstoque());
+            ps.setDouble(3, p.getValor_custo());
+            ps.setDouble(4, p.getValor_venda());
+            Date data = p.getDat_ultima_compra().getTime();
+            ps.setDate(5, new java.sql.Date (data.getTime()));
+            ps.setInt(6, p.getFornecedor().getId());
+            ps.setInt(7, p.getId());
+            
+            ps.executeUpdate();
+        } catch (SQLException ex) {   
+            ex.printStackTrace();
+            System.out.println(ex.getMessage());
+            throw new BancoDeDadosException(ex.getMessage());           
+        } finally{
+            try {
+                ps.close();
+            } catch (SQLException ex) {
+                throw new BancoDeDadosException(ex.getMessage()); 
+            }
+        }
     }
 
     @Override

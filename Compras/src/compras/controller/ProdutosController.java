@@ -60,4 +60,28 @@ public class ProdutosController {
                                 fornecedor);
         db.inserir(produto);
     }
+    
+    public void alterarProduto (int idProduto,
+                            String nome,
+                            int estoque,
+                            double valorCusto,
+                            double valorVenda,
+                            String datUltimaCompra,
+                            int idFornecedor) throws BancoDeDadosException {
+        Fornecedor fornecedor = new Fornecedor();
+        fornecedor.setId(idFornecedor);
+        Calendar dataUltimaCompra = Calendar.getInstance();
+        Date data = Date.valueOf(datUltimaCompra.replaceAll("\"", ""));
+        System.out.println(data);
+        dataUltimaCompra.setTime(data);
+        Produto produto = new Produto(idProduto, 
+                                nome, 
+                                estoque, 
+                                valorCusto, 
+                                valorVenda, 
+                                dataUltimaCompra, 
+                                fornecedor);
+        db.atualizar(produto);
+        listaProdutos.add(produto);
+    }
 }

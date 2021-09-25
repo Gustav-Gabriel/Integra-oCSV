@@ -185,17 +185,41 @@ public class Produto extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         String diretorio = "C:\\Compras";
         String nomeArquivo = "Produtos.csv";
-        try {
+         try {
             ArrayList<String> dados = GerenciadorDeArquivo.leituraDeDadosEmArquivo(new File(diretorio+"\\"+nomeArquivo));
             for (String dado : dados) {
                 String produto[] = dado.split(";");
-                controlador.salvarProduto(Integer.parseInt(produto[0]),
-                                          produto[1],
-                                          Integer.parseInt(produto[2]),
-                                          Double.parseDouble(produto[3]),
-                                          Double.parseDouble(produto[4]), 
-                                          produto[5], 
-                                          Integer.parseInt(produto[6]));
+                int operationType = Integer.parseInt(produto[0]);
+                int id = Integer.parseInt(produto[1]);
+                
+                
+                switch (operationType) {
+                    case 1: {
+                        controlador.salvarProduto(Integer.parseInt(produto[1]),
+                                          produto[2],
+                                          Integer.parseInt(produto[3]),
+                                          Double.parseDouble(produto[4]),
+                                          Double.parseDouble(produto[5]), 
+                                          produto[6], 
+                                          Integer.parseInt(produto[7]));
+                        break;
+                    }
+                    case 2: {
+                        
+                        controlador.alterarProduto(id,
+                                          produto[2],
+                                          Integer.parseInt(produto[3]),
+                                          Double.parseDouble(produto[4]),
+                                          Double.parseDouble(produto[5]), 
+                                          produto[6], 
+                                          Integer.parseInt(produto[7]));
+                        break;
+                    }
+                    case 3: { 
+                        // TO-DO: delete
+                        break;
+                    }
+                }
             }
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(rootPane, "Ocorreu um erro no processo de leitura. Verifique se o arquivo está correto.");
