@@ -84,4 +84,8 @@ public class ProdutosController {
         db.atualizar(produto);
         listaProdutos.add(produto);
     }
+
+    public void deletarProdutos(int idProduto) throws BancoDeDadosException {
+        db.excluir(idProduto);
+    }
 }

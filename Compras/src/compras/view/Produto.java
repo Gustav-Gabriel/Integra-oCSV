@@ -216,7 +216,7 @@ public class Produto extends javax.swing.JFrame {
                         break;
                     }
                     case 3: { 
-                        // TO-DO: delete
+                        controlador.deletarProdutos(id);
                         break;
                     }
                 }
