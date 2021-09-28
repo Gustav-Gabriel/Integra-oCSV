@@ -33,7 +33,7 @@ public class Fornecedor extends javax.swing.JFrame {
         this.preencheTabela();
     }
 
-    public void preencheTabela() {
+    public void preencheTabela() throws BancoDeDadosException {
 
         limpaTabela();
         int quantidadeDeFornecedores = this.controlador.getListaTodosFornecedores().size();
@@ -197,44 +197,63 @@ public class Fornecedor extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         String diretorio = "C:\\Compras";
         String nomeArquivo = "Fornecedores.csv";
+        String linha = "";
         try {
             ArrayList<String> dados = GerenciadorDeArquivo.leituraDeDadosEmArquivo(new File(diretorio+"\\"+nomeArquivo));
             for (String dado : dados) {
+                linha = dado;
                 String fornecedor[] = dado.split(";");
                 int operationType = Integer.parseInt(fornecedor[0]);
                 int id = Integer.parseInt(fornecedor[1]);
-                
-                switch (operationType) {
-                    case 1: {
-                        controlador.salvarFornecedores(id, 
-                                               fornecedor[2], 
-                                               fornecedor[3], 
-                                               fornecedor[4], 
-                                               fornecedor[5], 
-                                               fornecedor[6]);
-                        break;
+                try {
+                    
+                    switch (operationType) {
+                        case 1: {
+                            controlador.salvarFornecedores(id, 
+                                                   fornecedor[2], 
+                                                   fornecedor[3], 
+                                                   fornecedor[4], 
+                                                   fornecedor[5], 
+                                                   fornecedor[6]);
+                            ArrayList<String> l = new ArrayList<String>();
+                            l.add(linha);
+                            try {
+                                GerenciadorDeArquivo.gravaEmArquivo("C:\\Compras\\Pronto\\ProntoFornecedor.csv", l);
+                            } catch (IOException ex1) {
+                                Logger.getLogger(Fornecedor.class.getName()).log(Level.SEVERE, null, ex1);
+                            };
+                            break;
+                        }
+                        case 2: {
+                            controlador.alterarFornecedores(id, 
+                                                   fornecedor[2], 
+                                                   fornecedor[3], 
+                                                   fornecedor[4], 
+                                                   fornecedor[5], 
+                                                   fornecedor[6]);
+                            break;
+                        }
+                        case 3: { 
+                            controlador.deletarFornecedores(id);
+                            break;
+                        }
                     }
-                    case 2: {
-                        controlador.alterarFornecedores(id, 
-                                               fornecedor[2], 
-                                               fornecedor[3], 
-                                               fornecedor[4], 
-                                               fornecedor[5], 
-                                               fornecedor[6]);
-                        break;
+                    preencheTabela();
+                } catch (BancoDeDadosException ex) {
+                    linha = linha+';'+ex.getMessage();
+                    ArrayList<String> l = new ArrayList<String>();
+                    l.add(linha);
+                    try {
+                        GerenciadorDeArquivo.gravaEmArquivo("C:\\Compras\\Erro\\ErroFornecedor.csv", l);
+                    } catch (IOException ex1) {
+                        Logger.getLogger(Fornecedor.class.getName()).log(Level.SEVERE, null, ex1);
                     }
-                    case 3: { 
-                        controlador.deletarFornecedores(id);
-                        break;
-                    }
+                    JOptionPane.showMessageDialog(rootPane, "Ocorreu um erro no banco de dados durante o salvamento. Verifique se algum dado do arquivo está coerente com a documentação.");
                 }
             }
-            preencheTabela();
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(rootPane, "Ocorreu um erro no processo de leitura. Verifique se o arquivo está correto.");
-        } catch (BancoDeDadosException ex) {
-            JOptionPane.showMessageDialog(rootPane, "Ocorreu um erro no banco de dados durante o salvamento. Verifique se algum dado do arquivo está coerente com a documentação.");
-        }
+        } 
     }//GEN-LAST:event_jButton2ActionPerformed
 
     /**

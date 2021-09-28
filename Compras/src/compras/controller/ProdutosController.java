@@ -34,7 +34,8 @@ public class ProdutosController {
         return this.produto;
     }
 
-    public ArrayList<Produto> getListaProdutos() {
+    public ArrayList<Produto> getListaProdutos() throws BancoDeDadosException {
+        this.listaProdutos = db.buscaTodos();
         return this.listaProdutos;
     }
     

@@ -35,7 +35,7 @@ public class Produto extends javax.swing.JFrame {
         preencheTabela();
     }
 
-    public void preencheTabela() {
+    public void preencheTabela() throws BancoDeDadosException {
 
         limpaTabela();
 
@@ -56,14 +56,8 @@ public class Produto extends javax.swing.JFrame {
     }
 
     private void limpaTabela() {
-
-        for (int i = 1; i < this.controlador.getListaProdutos().size(); i++) {
-            if (((DefaultTableModel) this.jtProdutos.getModel()).getRowCount() > 0) {
-                ((DefaultTableModel) this.jtProdutos.getModel()).removeRow(i - 1);
-            }
-
-        }
-
+        DefaultTableModel tabela = (DefaultTableModel) jtProdutos.getModel();
+        tabela.setRowCount(0);
     }
 
     @SuppressWarnings("unchecked")
@@ -185,47 +179,66 @@ public class Produto extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         String diretorio = "C:\\Compras";
         String nomeArquivo = "Produtos.csv";
+        String linha = "";
          try {
             ArrayList<String> dados = GerenciadorDeArquivo.leituraDeDadosEmArquivo(new File(diretorio+"\\"+nomeArquivo));
             for (String dado : dados) {
+                linha = dado;
                 String produto[] = dado.split(";");
                 int operationType = Integer.parseInt(produto[0]);
                 int id = Integer.parseInt(produto[1]);
                 
-                
-                switch (operationType) {
-                    case 1: {
-                        controlador.salvarProduto(Integer.parseInt(produto[1]),
-                                          produto[2],
-                                          Integer.parseInt(produto[3]),
-                                          Double.parseDouble(produto[4]),
-                                          Double.parseDouble(produto[5]), 
-                                          produto[6], 
-                                          Integer.parseInt(produto[7]));
-                        break;
+                try {
+                        switch (operationType) {
+                        case 1: {
+                            controlador.salvarProduto(Integer.parseInt(produto[1]),
+                                              produto[2],
+                                              Integer.parseInt(produto[3]),
+                                              Double.parseDouble(produto[4]),
+                                              Double.parseDouble(produto[5]), 
+                                              produto[6], 
+                                              Integer.parseInt(produto[7]));
+                            ArrayList<String> l = new ArrayList<String>();
+                            l.add(linha);
+                            try {
+                                GerenciadorDeArquivo.gravaEmArquivo("C:\\Compras\\Pronto\\ProntoProduto.csv", l);
+                            } catch (IOException ex1) {
+                                Logger.getLogger(Produto.class.getName()).log(Level.SEVERE, null, ex1);
+                            };
+                            break;
+                        }
+                        case 2: {
+
+                            controlador.alterarProduto(id,
+                                              produto[2],
+                                              Integer.parseInt(produto[3]),
+                                              Double.parseDouble(produto[4]),
+                                              Double.parseDouble(produto[5]), 
+                                              produto[6], 
+                                              Integer.parseInt(produto[7]));
+                            break;
+                        }
+                        case 3: { 
+                            controlador.deletarProdutos(id);
+                            break;
+                        }
                     }
-                    case 2: {
-                        
-                        controlador.alterarProduto(id,
-                                          produto[2],
-                                          Integer.parseInt(produto[3]),
-                                          Double.parseDouble(produto[4]),
-                                          Double.parseDouble(produto[5]), 
-                                          produto[6], 
-                                          Integer.parseInt(produto[7]));
-                        break;
+                    preencheTabela();
+                } catch (BancoDeDadosException ex) {
+                    linha = linha+';'+ex.getMessage();
+                    ArrayList<String> l = new ArrayList<String>();
+                    l.add(linha);
+                    try {
+                        GerenciadorDeArquivo.gravaEmArquivo("C:\\Compras\\Erro\\ErroProduto.csv", l);
+                    } catch (IOException ex1) {
+                        Logger.getLogger(Produto.class.getName()).log(Level.SEVERE, null, ex1);
                     }
-                    case 3: { 
-                        controlador.deletarProdutos(id);
-                        break;
-                    }
+                    JOptionPane.showMessageDialog(rootPane, "Ocorreu um erro no banco de dados durante o salvamento. Verifique se algum dado do arquivo está coerente com a documentação.");
                 }
             }
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(rootPane, "Ocorreu um erro no processo de leitura. Verifique se o arquivo está correto.");
-        } catch (BancoDeDadosException ex) {
-            JOptionPane.showMessageDialog(rootPane, "Ocorreu um erro no banco de dados durante o salvamento. Verifique se algum dado do arquivo está coerente com a documentação.");
-        }
+        } 
     }//GEN-LAST:event_jButton2ActionPerformed
 
     /**

@@ -38,8 +38,7 @@ public class fornecedorDAO implements IDAO {
             
             ps.executeUpdate();
         } catch (SQLException ex) {   
-            ex.printStackTrace();
-            System.out.println(ex.getMessage());
+//            System.out.println(ex.getMessage());
             throw new BancoDeDadosException(ex.getMessage());           
         } finally{
             try {
